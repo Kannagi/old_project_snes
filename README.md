@@ -1,7 +1,9 @@
 # old_project_snes
-Old project I did on SNES.
-I no longer intend to continue the asm code, some code is a little buggy, and I don't know why (I haven't touched this code for years).
-If some functions are useful to you, do not hesitate to use them
+Old project I did on SNES.  
+I no longer intend to continue the asm code, some code is a little buggy, and I don't know why (I haven't touched this code for years).  
+If some functions are useful to you, do not hesitate to use them.  
+
+The compilation for linux is: `bash compilation.sh main.asm`  
 
 ## Screen
 
