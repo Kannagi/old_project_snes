@@ -1,0 +1,276 @@
+
+.MACRO SKS_TRACK_PLAY
+	mov a,kon
+	and a,#1<<\1
+	cmp a,#1<<\1
+	bne ++
+	
+	cmp cfirst+(\1),#0
+	bne +
+		clrc
+		
+		mov a,!SKSHEADER+16+((\1)*2)
+		adc a,#<SKSTRACK
+		mov track+0+((\1)*2),a
+		
+		mov a,!SKSHEADER+17+((\1)*2)
+		adc a,#>SKSTRACK
+		mov track+1+((\1)*2),a
+		
+		mov cfirst+(\1),#1
+		
+		mov ZP+0,track+0+((\1)*2)
+		mov ZP+1,track+1+((\1)*2)
+		mov y,#0
+		call !play_delay
+				
+		mov cticks+0+((\1)*2),tmp+0 ;5
+		mov cticks+1+((\1)*2),tmp+1 ;5
+		
+		
+		inc y
+		mov tmp+0,y
+		clrc ;2
+		adc track+0+((\1)*2),tmp+0 ;6
+		adc track+1+((\1)*2),#0    ;5
+		
+		
+	+:
+	
+	movw ya,cticks+((\1)*2)
+	cmpw ya,ticks+0
+	bne ++
+
+	mov ZP+0,track+0+((\1)*2)
+	mov ZP+1,track+1+((\1)*2)
+	
+	mov ckon,#1<<(\1)
+	
+	mov x,#\1
+	call !play_music
+
+	clrc
+	adc cticks+0+((\1)*2),tmp+0
+	adc cticks+1+((\1)*2),tmp+1
+	
+	
+	inc y
+	mov tmp+0,y
+	clrc
+	adc track+0+((\1)*2),tmp+0
+	adc track+1+((\1)*2),#0
+	
+	++:
+	
+.ENDM
+
+sks_play:
+
+	mov a,play
+	cmp a,#$FF
+	bne +
+		WDSP KOF,$FF
+		
+		mov play,#0
+		ret
+	+:
+	
+	mov a,play
+	cmp a,#$00
+	bne +
+		ret
+	+:
+	cmp a,#$02
+	bne +
+		WDSP KOF,$FF
+		call !SPC_RAM_Clear
+		
+		mov play,#1
+		mov first,a
+	+:
+	
+	cmp first,#0
+	bne +
+		mov first,#1
+		call !sks_header
+	+:
+
+	WDSP KOF,$00
+	
+	;------------------
+	
+	SKS_TRACK_PLAY 0
+	/*
+	SKS_TRACK_PLAY 1
+	SKS_TRACK_PLAY 2
+	SKS_TRACK_PLAY 3
+	SKS_TRACK_PLAY 4
+	SKS_TRACK_PLAY 5
+	SKS_TRACK_PLAY 6
+	SKS_TRACK_PLAY 7
+	*/
+	;-------------
+	incw ticks
+	
+	movw ya,emusic+0
+	cmpw ya,ticks+0
+	bne +
+		mov play,#2
+	+:
+	
+	ret
+
+
+sks_pattern:
+	
+	mov tmp+3,#0
+			
+	and a,#$01
+	cmp a,#$01
+	bne +
+		inc y
+		
+		
+		mov a,[ZP]+y
+		mov note+x,a
+		inc a
+		mov tmp+3,a
+	+:
+	
+	mov a,tmp+4
+	and a,#$02
+	cmp a,#$02
+	bne +
+		inc y
+		mov a,[ZP]+y
+		mov csrcn+x,a
+		mov srcn,a
+		call !select_index
+	+:
+	
+	mov a,tmp+4
+	and a,#$04
+	cmp a,#$04
+	bne +
+		inc y
+		mov a,[ZP]+y
+		mov cvolume+x,a
+		mov volume,a
+		
+	+:
+	
+	mov a,tmp+4
+	and a,#$08
+	cmp a,#$08
+	bne +
+		inc y
+		mov a,[ZP]+y
+		mov effect1+x,a
+		
+		
+		
+		mov a,#1
+		mov effect+x,a
+	+:
+		
+	mov a,tmp+4
+	and a,#$10
+	cmp a,#$10
+	bne +
+		inc y
+		mov a,[ZP]+y
+		mov effect2+x,a
+		
+		mov a,effect1+x
+		push x
+		and a,#$0F
+		asl a
+		mov x,a
+		call !effect_func
+		pop x
+			
+	+:
+	
+	mov a,tmp+4
+	and a,#$20
+	cmp a,#$20
+	bne +
+		mov a,note+x
+		inc a
+		mov tmp+3,a
+	+:
+	
+	mov a,tmp+3
+	cmp a,#$00
+	beq +
+		dec a
+		call !play_sample
+	+:
+
+	ret
+
+sks_header:
+	
+	
+	mov y,!SKSHEADER+0
+	mov a,#FLG
+	movw REG_ADD,YA
+	
+	mov a,!SKSHEADER+1
+	mov kon,a
+	
+	;ECHO
+	mov y,!SKSHEADER+2
+	mov a,#EFB
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+3
+	mov a,#EVOLL
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+4
+	mov a,#EVOLR
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+5
+	mov a,#FIRC0
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+6
+	mov a,#FIRC1
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+7
+	mov a,#FIRC2
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+8
+	mov a,#FIRC3
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+9
+	mov a,#FIRC4
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+10
+	mov a,#FIRC5
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+11
+	mov a,#FIRC6
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+12
+	mov a,#FIRC7
+	movw REG_ADD,YA
+	
+	mov a,!SKSHEADER+13
+	mov time,a
+	
+	mov a,!SKSHEADER+14
+	mov emusic+0,a
+	mov a,!SKSHEADER+15
+	mov emusic+1,a
+	
+	ret
+	

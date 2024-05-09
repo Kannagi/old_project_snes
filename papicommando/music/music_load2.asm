@@ -1,0 +1,11 @@
+music_load2: ;ZELDA GAMEBOY THEME
+
+	;sample
+	LKS_SPC_Set2 LKS_SPC_ADDR,LKS_SPC_SAMPLE
+	LKS_SPC_SetD BRR_Sample2,BRR_Sample2EOF-BRR_Sample2
+
+	;track
+	LKS_SPC_Set2 LKS_SPC_ADDR,LKS_SPC_SMXDIR
+	LKS_SPC_SetD music2,music2EOF-music2
+
+	rts

@@ -1,0 +1,13 @@
+
+.dw  BRRsin
+.dw  BRRsin
+.dw  BRRsin_mod3
+.dw  BRRsin_mod3
+.dw  $4000
+.dw  $0200
+.dw  $4000
+.dw  $0200
+.dw  $4000
+.dw  $0200
+.dw  $4000
+.dw  $0200

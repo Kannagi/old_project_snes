@@ -1,0 +1,302 @@
+
+.MACRO SKS_IO_SFX
+
+	mov tmp+0,#\1
+	mov tmp+1,#\2
+	
+	call !SKS_IO_SFX
+	
+.ENDM
+	
+SKS_IO:
+	
+	mov a,PORT_1
+	cmp a,#0
+	bne +
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_DATA
+	bne +
+		mov ZPD+0,ADDRL
+		mov ZPD+1,ADDRH
+		mov y,#0
+		-:
+		
+		mov a,PORT_2
+		mov [ZPD]+y,a
+		
+		inc y
+		mov a,PORT_3
+		mov [ZPD]+y,a
+
+		clrc
+		adc ZPD+0,#2
+		adc ZPD+1,#0
+		
+		inc PORT_0
+		
+		mov PORT_1,#0
+		--:
+			mov a,PORT_1
+			cmp a,#0
+		beq --
+		mov y,#0
+		
+		cmp a,#LKS_SPC_DATA
+		beq -
+		
+		mov ADDRL,ZPD+0
+		mov ADDRH,ZPD+1
+		
+		mov PORT_1,#0
+		ret
+	+:
+	
+	
+	
+	cmp a,#LKS_SPC_BRR_VOLUME
+	bne +
+		mov bvolume+0,PORT_2
+		mov bvolume+1,PORT_3
+
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_BRR_PLAY_TEST
+	bne +
+			
+		mov a,PORT_3
+		mov srcn,a
+		call !select_index
+		
+		mov a,PORT_2
+		clrc
+		adc a,relativ
+		call !set_pitch
+		
+		
+		mov arg+4,bvolume
+		mov arg+5,bvolume+1
+		
+		mov arg+1,#$7F
+		mov arg+2,#$E0
+		mov arg+3,#$7F
+
+		mov x,#0
+		call !set_voice
+		
+		WDSP KON,$01
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+
+	cmp a,#LKS_SPC_BRR_PLAY
+	bne +
+			
+		mov a,PORT_3
+		clrc
+		adc a,#$20
+		mov arg+0,a
+		
+		mov a,PORT_2
+		mov y,#$40
+		mul ya
+		
+		mov arg+6,a
+		mov arg+7,y
+		
+		mov arg+4,bvolume
+		mov arg+5,bvolume+1
+		
+		mov arg+1,#$7F
+		mov arg+2,#$E0
+		mov arg+3,#$7F
+		
+		mov tmp+2,#0
+		SKS_IO_SFX $80,7
+		SKS_IO_SFX $40,6
+		SKS_IO_SFX $20,5
+		SKS_IO_SFX $10,4
+		
+		SKS_IO_SFX $08,3
+		SKS_IO_SFX $04,2
+		SKS_IO_SFX $02,1
+		SKS_IO_SFX $01,0
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_BRR_PLAY8
+	bne +
+			
+		mov a,PORT_3
+		clrc
+		adc a,#$20
+		mov arg+0,a
+		
+		mov a,PORT_2
+		mov y,#$40
+		mul ya
+		
+		mov arg+6,a
+		mov arg+7,y
+		
+		mov arg+4,bvolume
+		mov arg+5,bvolume+1
+		
+		mov arg+1,#$7F
+		mov arg+2,#$E0
+		mov arg+3,#$7F
+		
+		mov x,#7
+		call !set_voice
+		
+		WDSP KON,$80
+		
+		mov sfxkof,#$80
+		
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_PLAY
+	bne +
+		
+		;call !sks_channel_debug
+		mov play,PORT_2
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+
+	cmp a,#LKS_SPC_ADDR
+	bne +
+		mov ADDRL,PORT_2
+		mov ADDRH,PORT_3
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+
+	cmp a,#LKS_SPC_VOLUME
+	bne +
+		mov y,PORT_2
+		mov a,#MVOLL
+		movw REG_ADD,YA
+		
+		mov y,PORT_3
+		mov a,#MVOLR
+		movw REG_ADD,YA
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	
+	;Read
+	cmp a,#LKS_SPC_TICKS
+	bne +
+		mov PORT_2,ticks
+		mov PORT_3,ticks+1
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_DEBUG
+	bne +
+		mov PORT_2,debug
+		mov PORT_3,debug+1
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	;Read
+	cmp a,#LKS_SPC_RADDR
+	bne +
+		;mov PORT_2,ADDRL
+		;mov PORT_3,ADDRH
+		
+		mov ZPD+0,PORT_2
+		mov ZPD+1,PORT_3
+		
+		mov y,#0
+		mov a,[ZPD]+y
+		mov PORT_2,a
+		
+		inc y
+		mov a,[ZPD]+y
+		mov PORT_3,a
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	cmp a,#LKS_SPC_RDATA
+	bne +
+		mov ZPD+0,ADDRL
+		mov ZPD+1,ADDRH
+		
+		mov y,#0
+		mov a,[ZPD]+y
+		mov PORT_2,a
+		
+		inc y
+		mov a,[ZPD]+y
+		mov PORT_3,a
+		
+		clrc
+		adc ADDRL,#1
+		adc ADDRH,#0
+		
+		inc PORT_0
+		mov PORT_1,#0
+		ret
+	+:
+	
+	ret
+
+SKS_IO_SFX:
+
+	mov a,tmp+2
+	cmp a,#$00
+	beq +
+		ret
+	+:
+	
+	mov a,tmp
+	and a,sfxkof
+	cmp a,#$00
+	beq +
+		ret
+	+:
+	
+	inc tmp+2
+		
+		
+	mov a,sfxkof
+	or a,tmp
+	mov sfxkof,a
+
+	mov x,tmp+1
+	call !set_voice
+	
+	SPC700 KON,tmp
+
+	ret

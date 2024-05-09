@@ -1,0 +1,319 @@
+.MACRO MIDI_playend
+	
+	mov a,!offset+(2*\1)
+	cmp a,!ticks
+	beq +
+		ret
+	+:
+	
+	mov a,!offset+1+(2*\1)
+	cmp a,!ticks+1
+	beq +
+		ret
+	+:
+	
+	
+	mov x,#\1
+	
+	mov a,!poffset+\1
+	mov !tmp2,a
+	
+	call !MIDI_playend
+	
+	
+	
+	
+.ENDM
+
+
+MIDI_playend:
+	
+	mov a,#0
+	mov !mode+x,a
+	
+
+	mov a,x
+	
+	push x
+	
+	mov y,#$10
+	mul ya
+	
+	mov y,#$00
+	
+	mov x,a
+	/*
+	mov a,x
+	clrc
+	adc a,#VOLL
+	movw REG_ADD,YA
+	
+	mov a,x
+	clrc
+	adc a,#VOLR
+	movw REG_ADD,YA
+	*/
+	pop x
+	
+	mov a,x
+	asl a
+	mov x,a
+	
+	
+	mov a,!lecture+x
+	clrc
+	adc	a,!tmp2
+	mov !lecture+x,a
+	
+	
+	mov a,!lecture+1+x
+	adc	a,#0
+	mov !lecture+1+x,a
+	
+	ret
+
+	
+playsongend:
+
+	mov a,!toffset
+	cmp a,#0
+	bne +
+		jmp !playsongendc0
+	+:
+	cmp a,#1
+	bne +
+		jmp !playsongendc1
+	+:
+	cmp a,#2
+	bne +
+		jmp !playsongendc2
+	+:
+	cmp a,#3
+	bne +
+		jmp !playsongendc3
+	+:
+	cmp a,#4
+	bne +
+		jmp !playsongendc4
+	+:
+	cmp a,#5
+	bne +
+		jmp !playsongendc5
+	+:
+	cmp a,#6
+	bne +
+		jmp !playsongendc6
+	+:
+	cmp a,#7
+	bne +
+		jmp !playsongendc7
+	+:
+
+
+	ret
+	
+playsongendc0:
+	MIDI_playend 0
+	jmp !playsongendn
+playsongendc1:
+	MIDI_playend 1
+	jmp !playsongendn	
+playsongendc2:
+	MIDI_playend 2
+	jmp !playsongendn
+playsongendc3:
+	MIDI_playend 3
+	jmp !playsongendn
+playsongendc4:
+	MIDI_playend 4
+	jmp !playsongendn
+playsongendc5:
+	MIDI_playend 5
+	jmp !playsongendn
+playsongendc6:
+	MIDI_playend 6
+	jmp !playsongendn
+playsongendc7:
+	MIDI_playend 7
+	jmp !playsongendn
+	
+playsongendn:
+
+	
+	
+	call !upload_offset
+	
+	ret
+	
+	
+.MACRO MIDI_play
+
+	mov a,!offset+(2*\1)
+	cmp a,!ticks
+	beq +
+		ret
+	+:
+	
+	mov a,!offset+1+(2*\1)
+	cmp a,!ticks+1
+	beq +
+		ret
+	+:
+	
+	
+	mov a,!bkon
+	and a,#$01<<\1
+	cmp a,#$01<<\1
+	beq +
+	
+		mov a,#\1
+		mov !tmp2,a
+		
+		call !MIDI_play	
+	
+		WDSP KON,$01<<\1
+	+:
+	
+	mov x,#\1
+	mov a,#1
+	mov !mode+x,a
+
+	
+.ENDM
+
+
+MIDI_play:
+
+	mov x,!tmp2
+	
+
+
+	call !SPC_Init_ON
+	
+	
+	mov a,!pitch+x
+	mov !tpitch,a
+	call !convert_pitch
+	
+	
+	
+	mov a,!srcn+x
+	mov !arg+0,a
+	
+	mov a,!adsr1+x
+	mov !arg+1,a
+	
+	mov a,!adsr2+x
+	mov !arg+2,a
+	
+	mov a,!gain+x
+	mov !arg+3,a
+	
+
+	mov a,!volume+x
+	mov !arg+4,a
+	mov !arg+5,a
+	
+	
+	push y
+	
+	mov a,!tmp2
+	mov y,#$10
+	mul ya
+	mov x,a
+	
+	pop y
+	
+	
+	
+	call !set_voice
+
+	ret
+
+
+
+
+playsong:
+
+
+	
+	mov a,!toffset
+	cmp a,#0
+	bne +
+		
+		jmp !playsongc0
+	+:
+	cmp a,#1
+	bne +
+		jmp !playsongc1
+	+:
+	cmp a,#2
+	bne +
+		jmp !playsongc2
+	+:
+	cmp a,#3
+	bne +
+		jmp !playsongc3
+	+:
+	cmp a,#4
+	bne +
+		jmp !playsongc4
+	+:
+	cmp a,#5
+	bne +
+		jmp !playsongc5
+	+:
+	cmp a,#6
+	bne +
+		jmp !playsongc6
+	+:
+	cmp a,#7
+	bne +
+		jmp !playsongc7
+	+:
+
+	ret
+	
+playsongc0:
+	
+	MIDI_play 0
+	
+	jmp !playsongn
+playsongc1:
+	
+	MIDI_play 1
+	
+	jmp !playsongn	
+playsongc2:
+	
+	MIDI_play 2
+	
+	jmp !playsongn
+playsongc3:
+	MIDI_play 3
+	
+	jmp !playsongn
+playsongc4:
+	MIDI_play 4
+	
+	jmp !playsongn
+playsongc5:
+	MIDI_play 5
+	
+	jmp !playsongn
+playsongc6:
+	MIDI_play 6
+	
+	
+	jmp !playsongn
+playsongc7:
+	MIDI_play 7
+	
+	
+	jmp !playsongn
+	
+playsongn:
+	call !upload_offset2
+
+	ret
+	

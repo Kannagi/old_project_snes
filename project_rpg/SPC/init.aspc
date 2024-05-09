@@ -1,0 +1,134 @@
+
+SPC_Init:
+	mov y,#0
+	mov a,#KON
+	movw REG_ADD,YA
+	
+	mov a,#PMON
+	movw REG_ADD,YA
+	
+	mov a,#NON
+	movw REG_ADD,YA
+	
+	mov a,#KOF
+	movw REG_ADD,YA
+	
+	mov a,#EON
+	movw REG_ADD,YA
+	
+
+	ret
+	
+SPC_Init_ON:
+	mov y,!pmon
+	mov a,#PMON
+	movw REG_ADD,YA
+	
+	mov y,!non
+	mov a,#NON
+	movw REG_ADD,YA
+	
+	mov y,!eon
+	mov a,#EON
+	movw REG_ADD,YA
+	
+	ret
+	
+SPC_Init_Header:
+
+	
+	mov y,!SKSHEADER+0
+	mov a,#FLG
+	movw REG_ADD,YA
+	
+	mov a,!SKSHEADER+1
+	mov !kon,a
+	
+	;ECHO
+	mov y,!SKSHEADER+2
+	mov a,#ESA
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+3
+	mov a,#EDL
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+4
+	mov a,#EFB
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+5
+	mov a,#EVOLL
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+6
+	mov a,#EVOLR
+	movw REG_ADD,YA
+	
+	
+	mov y,!SKSHEADER+7
+	mov a,#C0
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+8
+	mov a,#C1
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+9
+	mov a,#C2
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+10
+	mov a,#C3
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+11
+	mov a,#C4
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+12
+	mov a,#C5
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+13
+	mov a,#C6
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+14
+	mov a,#C7
+	movw REG_ADD,YA
+	
+	;ticks
+	mov a,!SKSHEADER+15
+	mov !emusic,a
+	
+	mov a,!SKSHEADER+16
+	mov !emusic+1,a
+	
+	
+	
+	ret
+	
+SPC_Init_Voice:
+
+	
+	mov x,!tmp
+	
+	mov a,#00
+	mov !arg+0,a
+	mov !arg+3,a
+	mov !arg+4,a
+	mov !arg+5,a
+	mov !tmp+0,a
+	mov !tmp+1,a
+	
+	mov a,#$FF
+	mov !arg+1,a
+	
+	mov a,#$E0
+	mov !arg+2,a	
+	
+	call !set_voice
+
+	ret
+	

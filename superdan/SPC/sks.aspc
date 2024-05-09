@@ -1,0 +1,133 @@
+
+sks_track:
+
+	
+	cmp cfirst,#0
+	bne +
+		mov cfirst,#1
+		mov cticks+0,#0
+		mov cticks+1,#0
+		
+		mov a,#<SKSTRACK
+		mov track+0,a
+		
+		mov a,#>SKSTRACK
+		mov track+1,a
+	+:
+	
+	
+	
+	;------------------
+	mov a,#0
+	mov tmp+0,a
+	mov tmp+1,a
+	mov samplekof,a
+	mov samplekon,a
+	
+	
+	;wait ticks
+	movw ya,cticks
+	cmpw ya,tmp
+	beq +
+		decw cticks
+		ret
+	+:
+	
+	;mov debug+1,csrcn
+	;mov debug,note
+
+	mov y,#0
+	mov a,[track]+y
+	mov tmp,a
+	
+	and a,#$80
+	cmp a,#$80
+	bne +;delay
+		call !sks_delay
+		decw cticks
+		bra ++
+	+:;cmd
+		call !sks_cmd
+	++:
+
+	;incw cticks
+	
+	inc y
+	mov tmp,y
+	clrc
+	adc track+0,tmp
+	adc track+1,#0
+	
+	mov a,#0
+	cmp a,samplekof
+	beq +
+		SPC700 KOF,samplekof
+	+:
+	
+	mov a,#0
+	cmp a,samplekon
+	beq +
+		SPC700 KON,samplekon
+	+:
+	ret
+
+sks_play:
+	;STOP
+	mov a,play
+	cmp a,#$FF
+	bne +
+		WDSP KOF,$FF
+		
+		mov play,#0
+		ret
+	+:
+	
+	;ON
+	mov a,play
+	cmp a,#$00
+	bne +
+		ret
+	+:
+	
+	;LOOP
+	cmp a,#$02
+	bne +
+		
+		mov a,#0
+		mov first,a
+		mov ticks+0,a
+		mov ticks+1,a
+		
+		mov cfirst+0,a
+		
+		mov a,sfxkof
+		eor a,#$FF
+		mov tmp,a
+		;SPC700 KOF,tmp
+		
+		;WDSP KOF,$FF
+
+		
+		mov a,#1
+		mov play,a
+	+:
+	
+	;read header
+	cmp first,#0
+	bne +
+		mov first,#1
+		call !sks_header
+	+:
+	
+	;------------------
+	call !sks_track
+	;-------------
+	incw ticks
+	
+	movw ya,emusic+0
+	cmpw ya,ticks+0
+	bne +
+		mov play,#2
+	+:
+	
+	ret

@@ -1,0 +1,86 @@
+
+BRRsin:
+.db $C3
+
+.db $03
+.db $56
+.db $76
+.db $53
+
+.db $0C
+.db $A9
+.db $89
+.db $AC
+
+BRRsin_mod1:
+.db $C3+4
+
+.db $03
+.db $56
+.db $76
+.db $53
+
+.db $0C
+.db $A9
+.db $89
+.db $AC
+
+BRRsin_mod2:
+.db $C3+8
+
+.db $03
+.db $56
+.db $76
+.db $53
+
+.db $0C
+.db $A9
+.db $89
+.db $AC
+
+BRRsin_mod3:
+.db $C3+4+8
+
+.db $03
+.db $56
+.db $76
+.db $30
+
+.db $FC
+.db $A9
+.db $89
+.db $CF
+
+BRRsquare:
+.db $C3
+
+.dw $7777
+.dw $8888
+
+.dw $7777
+.dw $8888
+
+BRRtriangle:
+.db $C0
+
+.db $01
+.db $23
+.db $45
+.db $67
+
+.db $76
+.db $54
+.db $32
+.db $10
+
+.db $C3
+
+.db $FE
+.db $DC
+.db $BA
+.db $98
+
+.db $89
+.db $AB
+.db $CD
+.db $EF

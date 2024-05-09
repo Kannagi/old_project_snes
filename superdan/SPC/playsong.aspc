@@ -1,0 +1,102 @@
+
+play_volume:
+	;if sfx
+	push a
+	mov a,sfxkof
+	and a,ckon
+	cmp a,#$00
+	beq +
+		pop a
+		ret
+	+:
+	pop a
+	
+	clrc
+	mov a,volume
+	adc a,avolume
+	
+	mov arg+4,a
+	mov arg+5,a
+	
+	mov a,x
+	
+	mov y,#$10
+	mul ya
+
+	;VOLL
+	mov y,arg+4
+	movw REG_ADD,YA
+	
+	;VOLR
+	inc a
+	mov y,arg+5
+	movw REG_ADD,YA
+	
+
+	ret
+
+play_sample:
+	
+	;if sfx
+	push a
+	mov a,sfxkof
+	and a,ckon
+	cmp a,#$00
+	beq +
+		pop a
+		ret
+	+:
+	pop a
+	
+	
+	
+	;if key off
+	cmp a,#$00
+	bne +
+		push y
+		;SPC700 KOF,ckon
+		pop y
+		mov a,samplekof
+		or a,ckon
+		mov samplekof,a
+		ret
+	+:
+	
+	;debug channel
+	push a
+	mov a,#$FF
+	and a,ckon
+	cmp a,ckon
+	beq +
+		pop a
+		;ret
+	+:
+	pop a
+	
+	;play note
+	push y
+	
+	clrc
+	adc a,relativ
+	call !set_pitch
+	
+	clrc
+	mov a,volume
+	adc a,avolume
+	
+	mov arg+4,a
+	mov arg+5,a
+	
+	
+	call !set_voice
+	
+	mov a,samplekon
+	or a,ckon
+	mov samplekon,a
+	
+	;SPC700 KON,ckon
+	
+	pop y
+
+	ret
+	

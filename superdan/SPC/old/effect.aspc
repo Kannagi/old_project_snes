@@ -1,0 +1,75 @@
+
+effect_func:
+
+	jmp [!effect_func_table+x]
+
+	ret
+	
+effect_func_0:
+	;mov debug,#1
+	ret
+	
+effect_func_1:
+	ret
+
+effect_func_2:
+	
+	ret
+	
+effect_func_3:
+	ret
+	
+effect_func_4:
+	ret
+	
+effect_func_5:
+	ret
+	
+effect_func_6:
+	ret
+	
+effect_func_7:
+	ret	
+	
+effect_func_8:
+	ret
+
+effect_func_9:
+	ret
+	
+effect_func_A:
+	;mov debug,#$A
+	ret
+	
+effect_func_B:
+	ret
+	
+effect_func_C:
+	ret
+	
+effect_func_D:
+	ret
+	
+effect_func_E:
+	ret	
+	
+effect_func_F:
+	ret
+	
+effect_func_table:
+	.dw effect_func_0
+	.dw effect_func_1
+	.dw effect_func_2
+	.dw effect_func_3
+	.dw effect_func_4
+	.dw effect_func_5
+	.dw effect_func_6
+	.dw effect_func_7
+	.dw effect_func_8
+	.dw effect_func_9
+	.dw effect_func_A
+	.dw effect_func_B
+	.dw effect_func_C
+	.dw effect_func_D
+	.dw effect_func_E
+	.dw effect_func_F

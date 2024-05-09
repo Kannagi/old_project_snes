@@ -1,0 +1,189 @@
+
+sks_effect:
+	;mov debug,#1
+
+	ret
+	
+sks_delay:	
+	
+	mov a,tmp
+	and a,#$C0
+	cmp a,#$C0
+	bne + ;2bytes
+		inc y
+		mov a,[track]+y
+		mov cticks+0,a
+		
+		mov a,tmp
+		and a,#$3F
+		mov cticks+1,a
+		
+		mov debug+0,cticks
+		mov debug+1,cticks+1
+		ret
+	+:
+	;1 byte
+	mov a,tmp
+	and a,#$3F
+	mov cticks+0,a
+	mov cticks+1,#0
+	
+
+	
+	ret
+
+CH_KEY:
+.db $1,$2,$4,$8,$10,$20,$40,$80
+
+sks_cmd:
+	mov a,tmp
+	and a,#$F0
+	lsr a
+	lsr a
+	lsr a
+	lsr a
+	mov x,a
+	mov a,!CH_KEY+x
+	mov ckon,a
+	
+	
+	mov a,cvolume+x
+	mov volume,a
+	
+	mov a,csrcn+x
+	mov srcn,a
+	call !select_index
+	
+	mov tmp+3,#0
+	
+	mov a,tmp
+	and a,#$0F
+	mov tmp,a
+	
+	
+	;note
+	mov a,tmp
+	and a,#$1
+	cmp a,#$1
+	bne +
+		inc y
+		mov a,[track]+y
+		mov note+x,a
+		inc a
+		mov tmp+3,a
+	+:
+	
+	;note repeat
+	mov a,tmp
+	and a,#$2
+	cmp a,#$2
+	bne +
+		mov a,note+x
+		inc a
+		mov tmp+3,a
+	+:
+	
+	;instrument
+	mov a,tmp
+	and a,#$4
+	cmp a,#$4
+	bne +
+		inc y
+		mov a,[track]+y
+		mov csrcn+x,a
+		mov srcn,a
+		call !select_index
+	+:
+	
+	;volume
+	mov a,tmp
+	and a,#$8
+	cmp a,#$8
+	bne +
+		inc y
+		mov a,[track]+y
+		mov cvolume+x,a
+		mov volume,a
+		call !play_volume
+	+:
+	
+	
+	
+	;play
+	mov a,tmp+3
+	cmp a,#$00
+	beq +
+		
+		dec a
+		call !play_sample
+	+:
+
+	ret
+
+
+
+sks_header:
+	
+	
+	mov y,!SKSHEADER+0
+	mov a,#FLG
+	movw REG_ADD,YA
+	
+	mov a,!SKSHEADER+1
+	mov kon,a
+	
+	;ECHO
+	mov y,!SKSHEADER+2
+	mov a,#EFB
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+3
+	mov a,#EVOLL
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+4
+	mov a,#EVOLR
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+5
+	mov a,#FIRC0
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+6
+	mov a,#FIRC1
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+7
+	mov a,#FIRC2
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+8
+	mov a,#FIRC3
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+9
+	mov a,#FIRC4
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+10
+	mov a,#FIRC5
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+11
+	mov a,#FIRC6
+	movw REG_ADD,YA
+	
+	mov y,!SKSHEADER+12
+	mov a,#FIRC7
+	movw REG_ADD,YA
+	
+	mov a,!SKSHEADER+13
+	mov time,a
+	
+	mov a,!SKSHEADER+14
+	mov emusic+0,a
+	mov a,!SKSHEADER+15
+	mov emusic+1,a
+	
+	ret
+	

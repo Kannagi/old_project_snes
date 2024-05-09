@@ -1,0 +1,95 @@
+.include "SPC/header.aspc"
+.include "SPC/spc.aspc"
+.include "SPC/ram.aspc"
+
+.include "SPC/spc.asm"
+
+Main:
+
+	bra +
+	.db $00,$00,$00,$00,$00,$00,$00,$00
+	.db "Super Kannagi Sound 0.9.5"
+	+:
+	
+	mov x,#$FF
+	mov sp,x
+	;di
+	
+	call !SPC_Init
+	call !SPC_RAM_Clear
+	
+	Loop:
+		mov TIMER_0,#$20 ; $8 = 1 ms		
+		mov CONTROL,#$01 ; TIMER0 Start
+
+		call !sks_play
+
+		mov otimems,timems
+		mov timems,#0
+		
+
+		;Ticks SNES (4ms)
+		-:
+			inc timems
+			
+			call !sks_end_sfx
+			call !SKS_IO
+			
+			mov a,COUNTER_0
+		beq -
+		
+	jmp !Loop
+
+	
+sks_end_sfx:
+
+	mov a,#ENDX
+	mov REG_ADD,a
+	mov a,REG_DATA
+	and a,sfxkof
+	
+	eor a,#$FF
+	and a,sfxkof
+	mov sfxkof,a
+	
+	WDSP KOF,$00
+	
+	ret
+
+	.include "SPC/sksio.aspc"
+	.include "SPC/playsong.aspc"
+	.include "SPC/init.aspc" 
+	.include "SPC/sks.aspc"
+	.include "SPC/sks2.aspc"
+	.include "SPC/set.aspc"
+	.include "SPC/effect.aspc"
+
+.org $E00
+.include "SPC/brr.aspc"
+
+.org $EA0
+SKSINDEXP:
+.db $89
+.db $1F
+.db $7F
+
+.db $89
+.db $1F
+.db $7F
+
+.org $F00
+.include "SPC/spcdir.aspc"
+
+/*
+RAM/IO : 0x000 - 0x200
+PRG : 0x0200 - 0x10FF 
+SampleDIR : 0x1100 - 0x127F
+header : 0x1280 - 0x133F
+track : 0x1340 - 0x3FFF
+Sample : 0x4000 - 0xFFBF
+
+32 sample adsr/gain
+32 sfx
+32 sample for music
+
+*/

@@ -1,0 +1,103 @@
+
+sks_effect:
+	mov debug,#1
+
+	ret
+	
+play_music:
+
+	mov a,cvolume+x
+	mov volume,a
+	
+	mov a,csrcn+x
+	mov srcn,a
+	call !select_index
+	
+	mov a,effect+x
+	cmp a,#0
+	beq +
+		;call !sks_effect
+	+:
+	
+	mov y,#0
+	mov a,[ZP]+y
+	mov tmp+4,a
+
+	and a,#$C0
+	cmp a,#$C0
+	bne +
+		mov a,tmp+4
+		call !sks_pattern
+		bra ++
+	+:
+		mov a,tmp+4
+		call !play_sample
+	++:
+	
+	inc y
+	call !play_delay
+	
+	
+	ret
+
+play_delay:
+	mov a,[ZP]+y
+	
+	mov tmp+2,a
+	and tmp+2,#$7F
+	
+	and a,#$80
+	cmp a,#$80
+	bne +
+		inc y
+		mov a,[ZP]+y
+		mov tmp+0,a
+		mov tmp+1,tmp+2
+		
+		ret
+	+:
+		mov tmp+0,tmp+2
+		mov tmp+1,#0
+	++:
+	
+	ret
+	
+play_sample:
+	
+	cmp a,#$00
+	bne +
+		mov a,bkof
+		or a,ckon
+		mov bkof,a
+		ret
+	+:
+	
+	push y
+	
+	clrc
+	adc a,relativ
+	call !set_pitch
+	
+	mov a,volume
+	adc a,avolume
+	mov arg+4,a
+	mov arg+5,a
+
+	
+	call !set_voice
+	
+	SPC700 KON,ckon
+	
+	mov a,ckon
+	eor a,#$FF
+	mov ckon,a
+	
+	mov a,bkof
+	and a,ckon
+	mov bkof,a
+	
+	
+	pop y
+
+	ret
+	

@@ -1,0 +1,70 @@
+
+; 255 pixel
+
+ .dw   $00ff, $00fe, $00fe, $00fe, $00fd, $00fd, $00fc, $00fb
+ .dw   $00fa, $00f8, $00f7, $00f5, $00f4, $00f2, $00f0, $00ed
+ .dw   $00eb, $00e9, $00e6, $00e3, $00e0, $00dd, $00da, $00d7
+ .dw   $00d4, $00d0, $00cc, $00c9, $00c5, $00c1, $00bc, $00b8
+ .dw   $00b4, $00af, $00ab, $00a6, $00a1, $009c, $0097, $0092
+ .dw   $008d, $0088, $0083, $007d, $0078, $0072, $006d, $0067
+ .dw   $0061, $005b, $0055, $004f, $004a, $0044, $003d, $0037
+ .dw   $0031, $002b, $0025, $001f, $0019, $0012, $000c, $0006
+ .dw   $0000, $fffa, $fff4, $ffee, $ffe8, $ffe1, $ffdb, $ffd5
+ .dw   $ffcf, $ffc9, $ffc3, $ffbd, $ffb6, $ffb1, $ffab, $ffa5
+ .dw   $ff9f, $ff99, $ff93, $ff8e, $ff88, $ff83, $ff7d, $ff78
+ .dw   $ff73, $ff6e, $ff69, $ff64, $ff5f, $ff5a, $ff55, $ff51
+ .dw   $ff4c, $ff48, $ff44, $ff3f, $ff3b, $ff37, $ff34, $ff30
+ .dw   $ff2c, $ff29, $ff26, $ff23, $ff20, $ff1d, $ff1a, $ff17
+ .dw   $ff15, $ff13, $ff10, $ff0e, $ff0c, $ff0b, $ff09, $ff08
+ .dw   $ff06, $ff05, $ff04, $ff03, $ff03, $ff02, $ff02, $ff02
+ .dw   $ff02, $ff02, $ff02, $ff02, $ff03, $ff03, $ff04, $ff05
+ .dw   $ff06, $ff08, $ff09, $ff0b, $ff0c, $ff0e, $ff10, $ff13
+ .dw   $ff15, $ff17, $ff1a, $ff1d, $ff20, $ff23, $ff26, $ff29
+ .dw   $ff2c, $ff30, $ff34, $ff37, $ff3b, $ff3f, $ff44, $ff48
+ .dw   $ff4c, $ff51, $ff55, $ff5a, $ff5f, $ff64, $ff69, $ff6e
+ .dw   $ff73, $ff78, $ff7d, $ff83, $ff88, $ff8e, $ff93, $ff99
+ .dw   $ff9f, $ffa5, $ffab, $ffb0, $ffb6, $ffbc, $ffc3, $ffc9
+ .dw   $ffcf, $ffd5, $ffdb, $ffe1, $ffe7, $ffee, $fff4, $fffa
+ .dw   $0000, $0006, $000c, $0012, $0018, $001f, $0025, $002b
+ .dw   $0031, $0037, $003d, $0043, $0049, $004f, $0055, $005b
+ .dw   $0061, $0067, $006c, $0072, $0078, $007d, $0083, $0088
+ .dw   $008d, $0092, $0097, $009c, $00a1, $00a6, $00ab, $00af
+ .dw   $00b4, $00b8, $00bc, $00c1, $00c5, $00c9, $00cc, $00d0
+ .dw   $00d4, $00d7, $00da, $00dd, $00e0, $00e3, $00e6, $00e9
+ .dw   $00eb, $00ed, $00f0, $00f2, $00f4, $00f5, $00f7, $00f8
+ .dw   $00fa, $00fb, $00fc, $00fd, $00fd, $00fe, $00fe, $00fe
+
+;sin 255 pixel
+
+ .dw   $00ff, $00fe, $00fe, $00fe, $00fd, $00fd, $00fc, $00fb
+ .dw   $00fa, $00f8, $00f7, $00f5, $00f4, $00f2, $00f0, $00ed
+ .dw   $00eb, $00e9, $00e6, $00e3, $00e0, $00dd, $00da, $00d7
+ .dw   $00d4, $00d0, $00cc, $00c9, $00c5, $00c1, $00bc, $00b8
+ .dw   $00b4, $00af, $00ab, $00a6, $00a1, $009c, $0097, $0092
+ .dw   $008d, $0088, $0083, $007d, $0078, $0072, $006d, $0067
+ .dw   $0061, $005b, $0055, $004f, $004a, $0044, $003d, $0037
+ .dw   $0031, $002b, $0025, $001f, $0019, $0012, $000c, $0006
+ .dw   $0000, $fffa, $fff4, $ffee, $ffe8, $ffe1, $ffdb, $ffd5
+ .dw   $ffcf, $ffc9, $ffc3, $ffbd, $ffb6, $ffb1, $ffab, $ffa5
+ .dw   $ff9f, $ff99, $ff93, $ff8e, $ff88, $ff83, $ff7d, $ff78
+ .dw   $ff73, $ff6e, $ff69, $ff64, $ff5f, $ff5a, $ff55, $ff51
+ .dw   $ff4c, $ff48, $ff44, $ff3f, $ff3b, $ff37, $ff34, $ff30
+ .dw   $ff2c, $ff29, $ff26, $ff23, $ff20, $ff1d, $ff1a, $ff17
+ .dw   $ff15, $ff13, $ff10, $ff0e, $ff0c, $ff0b, $ff09, $ff08
+ .dw   $ff06, $ff05, $ff04, $ff03, $ff03, $ff02, $ff02, $ff02
+ .dw   $ff02, $ff02, $ff02, $ff02, $ff03, $ff03, $ff04, $ff05
+ .dw   $ff06, $ff08, $ff09, $ff0b, $ff0c, $ff0e, $ff10, $ff13
+ .dw   $ff15, $ff17, $ff1a, $ff1d, $ff20, $ff23, $ff26, $ff29
+ .dw   $ff2c, $ff30, $ff34, $ff37, $ff3b, $ff3f, $ff44, $ff48
+ .dw   $ff4c, $ff51, $ff55, $ff5a, $ff5f, $ff64, $ff69, $ff6e
+ .dw   $ff73, $ff78, $ff7d, $ff83, $ff88, $ff8e, $ff93, $ff99
+ .dw   $ff9f, $ffa5, $ffab, $ffb0, $ffb6, $ffbc, $ffc3, $ffc9
+ .dw   $ffcf, $ffd5, $ffdb, $ffe1, $ffe7, $ffee, $fff4, $fffa
+ .dw   $0000, $0006, $000c, $0012, $0018, $001f, $0025, $002b
+ .dw   $0031, $0037, $003d, $0043, $0049, $004f, $0055, $005b
+ .dw   $0061, $0067, $006c, $0072, $0078, $007d, $0083, $0088
+ .dw   $008d, $0092, $0097, $009c, $00a1, $00a6, $00ab, $00af
+ .dw   $00b4, $00b8, $00bc, $00c1, $00c5, $00c9, $00cc, $00d0
+ .dw   $00d4, $00d7, $00da, $00dd, $00e0, $00e3, $00e6, $00e9
+ .dw   $00eb, $00ed, $00f0, $00f2, $00f4, $00f5, $00f7, $00f8
+ .dw   $00fa, $00fb, $00fc, $00fd, $00fd, $00fe, $00fe, $00fe
